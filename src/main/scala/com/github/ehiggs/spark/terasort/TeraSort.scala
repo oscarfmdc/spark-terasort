@@ -55,13 +55,11 @@ object TeraSort {
     val conf = new SparkConf()
       .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
       .setAppName(s"TeraSort")
-    val sc = new SparkContext(conf)
+    val sc = SparkContext.getOrCreate(conf)
 
     val dataset = sc.newAPIHadoopFile[Array[Byte], Array[Byte], TeraInputFormat](inputFile)
     val sorted = dataset.repartitionAndSortWithinPartitions(
       new TeraSortPartitioner(dataset.partitions.length))
     sorted.saveAsNewAPIHadoopFile[TeraOutputFormat](outputFile)
-    
-    sc.stop()
   }
 }

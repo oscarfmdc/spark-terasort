@@ -55,7 +55,7 @@ object TeraValidate {
     val conf = new SparkConf()
       .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
       .setAppName(s"TeraValidate")
-    val sc = new SparkContext(conf)
+    val sc = SparkContext.getOrCreate(conf)
 
     val dataset = sc.newAPIHadoopFile[Array[Byte], Array[Byte], TeraInputFormat](inputFile)
     validate(sc, dataset)
